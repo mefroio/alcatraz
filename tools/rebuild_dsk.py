@@ -253,6 +253,7 @@ def main():
     sources = {
         "autoexec": reference / "AUTOEXEC.BAS",
         "alcatraz": reference / "ALCATRAZ.BAS",
+        "intro2": reference / "INTRO2.BAS",
         "alcatraz2": reference / "ALCATRAZ2.BAS",
     }
 
@@ -271,6 +272,7 @@ def main():
 
     autoexec = numbered_source(sources["autoexec"]).encode("ascii") + b"\x1a"
     alcatraz = tokenize(tokenizer, sources["alcatraz"], "ALCATRAZ", build_dir)
+    intro2 = tokenize(tokenizer, sources["intro2"], "INTRO2", build_dir)
     alcatraz2 = tokenize(tokenizer, sources["alcatraz2"], "ALCATRA2", build_dir)
 
     output = reference / "ALCATRAZ.DSK"
@@ -279,6 +281,7 @@ def main():
         [
             ("AUTOEXEC", "BAS", autoexec),
             ("ALCATRAZ", "BAS", alcatraz),
+            ("INTRO2", "BAS", intro2),
             ("ALCATRA2", "BAS", alcatraz2),
         ],
     )
@@ -287,7 +290,7 @@ def main():
     for name, ext, cluster, size in root_entries:
         print(f"{name}.{ext} cluster={cluster} size={size}")
 
-    for label, data in [("ALCATRAZ.BAS", alcatraz), ("ALCATRA2.BAS", alcatraz2)]:
+    for label, data in [("ALCATRAZ.BAS", alcatraz), ("INTRO2.BAS", intro2), ("ALCATRA2.BAS", alcatraz2)]:
         ok, lines, last_line, program_end = inspect_basic(data)
         free = 0xDE3F - program_end if program_end else 0
         print(
