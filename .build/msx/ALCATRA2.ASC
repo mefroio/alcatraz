@@ -271,7 +271,7 @@
 2520 IFJ>20THENPRINT#1,"Nao da'.":RETURN
 2530 Q=0:FORN=0TONS:IFLEFT$(SU$(N),1)="*"THENQ=Q+1
 2540 NEXT
-2550 IFQ>7THENPRINT#1,"Nao da' para pegar mais nada.":RETURN
+2550 IFQ>6THENPRINT#1,"Suas maos e bolsos estao cheios.Largue algo antes de pegar mais.":RETURN
 2560 IFLEFT$(SU$(J),1)="*"THENPRINT#1,"Voce ja' esta' carregando este  objeto.":RETURN
 2570 SU$(J)="**"+FNS$(J):PRINT#1,"Ok.":RETURN
 2610 IFLEFT$(SU$(J),1)<>"*"THENPRINT#1,"Voce nao carrega ";FNS$(J):RETURN

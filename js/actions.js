@@ -339,8 +339,18 @@ const HANDLERS = {
     const scenario = currentScenario(ctx);
     const canTake = J <= 21 || scenario.takeableNouns.includes(J);
     if (!canTake) { ctx.msg('Não dá.'); return; }
-    const inventoryLimit = isAlcatraz2(ctx) ? 7 : 5;
-    if (ctx.carriedCount() > inventoryLimit) { ctx.msg('Não dá para pegar mais nada.'); return; }
+    // Maximo de itens carregados. No Alcatraz 2 e' 7: e' o que cabe nas 3
+    // linhas da area de texto no pior caso (nomes longos como RESPIRADOR) e
+    // ainda deixa folga sobre o pico do caminho critico (~5 simultaneos).
+    // O original mantem o limite do BASIC de 1986 (6). carriedCount() conta
+    // ANTES de pegar, entao comparamos com (max-1).
+    const maxItems = isAlcatraz2(ctx) ? 7 : 6;
+    if (ctx.carriedCount() > maxItems - 1) {
+      ctx.msg(isAlcatraz2(ctx)
+        ? 'Suas mãos e bolsos estão cheios. Largue algo antes de pegar mais.'
+        : 'Não dá para pegar mais nada.');
+      return;
+    }
     if (ctx.carried(J)) { ctx.msg('Você já está carregando este objeto.'); return; }
     ctx.setLoc(J, '**');
     ctx.msg('Ok.');
