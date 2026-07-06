@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alcatraz - A Fuga Impossível</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="titleScreen">
+  <canvas id="titleCanvas" width="512" height="384"></canvas>
+  <div id="scenarioPicker" aria-label="Escolha a versão do jogo">
+    <button class="scenarioButton selected" type="button" data-scenario="original" aria-pressed="true">
+      <strong>Alcatraz</strong>
+      <span>Original MSX - 1986</span>
+    </button>
+    <button class="scenarioButton" type="button" data-scenario="alcatraz2" aria-pressed="false">
+      <strong>Alcatraz 2</strong>
+      <span>A fuga ainda mais impossível</span>
+    </button>
+  </div>
+  <p id="scenarioDescription" class="scenarioDescription"></p>
+  <p id="titleCredit" class="credit">Programa original para MSX de Wilson F. Martins (1986) &mdash; port HTML/JavaScript por Rodrigo G.M. Garcia</p>
+  <button id="btnStartGame" class="startButton" type="button">Começar</button>
+  <p id="titlePrompt" class="prompt">Escolha uma versão e pressione ESPAÇO ou Começar</p>
+</div>
+
+<div id="gameScreen" class="hidden">
+  <main id="playArea">
+    <canvas id="logoBanner" width="696" height="144"></canvas>
+    <canvas id="mazeCanvas" width="256" height="192"></canvas>
+    <div id="messageLog" aria-live="polite"></div>
+    <div id="commandBar">
+      <label for="commandInput">Comando:</label>
+      <input id="commandInput" type="text" autocomplete="off" spellcheck="false" maxlength="30" placeholder="ex: PEGUE PA">
+    </div>
+    <div id="quickButtons">
+      <button id="btnLook" type="button">Ver objetos aqui (Tab)</button>
+      <button id="btnInventory" type="button">Ver inventário (Esc)</button>
+    </div>
+  </main>
+
+  <aside id="legend">
+    <h2>Comandos</h2>
+
+    <section>
+      <h3>Movimento</h3>
+      <p>&uarr; &darr; &larr; &rarr; &mdash; andar pelo labirinto</p>
+    </section>
+
+    <section>
+      <h3>Teclas especiais</h3>
+      <p><kbd>Tab</kbd> &mdash; ver objetos no local atual</p>
+      <p><kbd>Esc</kbd> &mdash; ver inventário</p>
+      <p><kbd>Enter</kbd> &mdash; confirmar comando digitado</p>
+    </section>
+
+    <section>
+      <h3>Sintaxe</h3>
+      <p>VERBO SUBSTANTIVO<br>VERBO SUBSTANTIVO [preposição] SUBSTANTIVO</p>
+      <p class="example">ex: ABRA GRADES COM CHAVE</p>
+    </section>
+
+    <section>
+      <h3>Verbos</h3>
+      <p id="legendVerbs" class="wordlist"></p>
+    </section>
+
+  </aside>
+</div>
+
+<div id="endScreen" class="hidden overlay">
+  <div class="panel">
+    <h2 id="endTitle"></h2>
+    <p id="endSubtitle"></p>
+    <button id="btnRestart" type="button">Jogar novamente (S)</button>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/parser.js"></script>
+<script src="js/actions.js"></script>
+<script src="js/renderer.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

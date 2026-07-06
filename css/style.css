@@ -1,0 +1,258 @@
+:root {
+  --bg: #0b0b10;
+  --panel: #16161f;
+  --panel-alt: #1e1e2a;
+  --text: #e8e8ec;
+  --muted: #9a9aab;
+  --accent: #65DBEF;
+  --accent2: #FF897D;
+  --border: #33333f;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100%;
+}
+
+.hidden { display: none !important; }
+
+/* ---- Tela de título ---- */
+#titleScreen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  cursor: pointer;
+  padding: 1rem;
+  text-align: center;
+}
+#titleCanvas {
+  width: min(90vw, 512px);
+  height: auto;
+  image-rendering: pixelated;
+  border: 2px solid var(--border);
+}
+#titleScreen .credit { color: var(--muted); font-size: 0.85rem; margin: 0; }
+#titleScreen .prompt { color: var(--accent); font-size: 1rem; animation: blink 1.4s infinite; margin: 0; }
+
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+
+/* ---- Tela de jogo ---- */
+#gameScreen {
+  display: flex;
+  min-height: 100vh;
+  /* "safe center": centraliza quando cabe, mas nunca deixa conteúdo cortado
+     e inacessível acima do topo da tela quando o conteúdo é mais alto que
+     a viewport (nesse caso vira top-aligned e a página rola normalmente). */
+  align-items: safe center;
+  justify-content: safe center;
+  padding: 1rem;
+  gap: 1.5rem;
+}
+
+#playArea {
+  flex: 1 1 860px;
+  max-width: 860px; /* mapa bem maior, com espaço para crescer conforme explora */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+/* Orçamento de altura pensado para caber sem rolagem até em telas baixas
+   (~650px úteis): banner + labirinto ~50vh + log ~20vh + comando/botões
+   e gaps (~150px fixos) fica bem abaixo de 100vh mesmo com folga de sobra. */
+#logoBanner {
+  /* tamanho original (60vw/600px) em telas normais; o 3o valor (63vh) só
+     entra em ação em telas baixas, encolhendo o logo o mínimo necessário
+     para não estourar o resto da coluna — imperceptível em telas normais. */
+  width: min(60vw, 600px, 63vh);
+  height: auto;
+  aspect-ratio: 696 / 144;
+  image-rendering: pixelated;
+  flex: 0 0 auto;
+}
+
+#mazeCanvas {
+  width: min(85vw, 860px, 67vh);
+  height: auto; /* preserva a proporção 4:3 nativa (256x192) */
+  aspect-ratio: 4 / 3;
+  image-rendering: pixelated;
+  border: 3px solid var(--border);
+  background: #000;
+  flex: 0 0 auto;
+}
+
+#messageLog {
+  width: min(85vw, 860px);
+  flex: 1 1 auto;
+  min-height: 10vh; /* vh em vez de rem: encolhe também em telas baixas */
+  max-height: 20vh;
+  overflow-y: auto;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 0.6rem 0.8rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+#messageLog p { margin: 0 0 0.4em 0; }
+#messageLog p:last-child { color: var(--accent); }
+
+#commandBar {
+  width: min(85vw, 860px);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+#commandBar label { color: var(--muted); font-size: 0.9rem; }
+#commandInput {
+  flex: 1 1 auto;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.5rem 0.6rem;
+}
+#commandInput:focus { outline: 2px solid var(--accent); }
+
+#quickButtons {
+  width: min(85vw, 860px);
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+button {
+  font-family: inherit;
+  background: var(--panel-alt);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+button:hover { border-color: var(--accent); color: var(--accent); }
+
+#scenarioPicker {
+  width: min(90vw, 512px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+button.scenarioButton {
+  min-height: 4.8rem;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.scenarioButton strong,
+.scenarioButton span {
+  display: block;
+}
+
+.scenarioButton strong {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.scenarioButton span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.scenarioButton.selected {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.scenarioButton.selected span {
+  color: var(--text);
+}
+
+.scenarioDescription {
+  width: min(90vw, 512px);
+  min-height: 2.7rem;
+  margin: 0;
+  color: var(--text);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+button.startButton {
+  min-width: 10rem;
+  border-color: var(--accent);
+}
+
+/* ---- Painel de legendas (fixo) ---- */
+#legend {
+  flex: 0 0 300px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 1rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 4rem); /* cabe ao lado do #playArea centralizado, com scroll interno se precisar */
+}
+#legend h2 { margin: 0 0 0.75rem 0; font-size: 1.1rem; color: var(--accent); }
+#legend h3 { margin: 1rem 0 0.3rem 0; font-size: 0.85rem; color: var(--accent2); text-transform: uppercase; letter-spacing: 0.05em; }
+#legend section:first-of-type h3 { margin-top: 0; }
+#legend p { margin: 0.2rem 0; font-size: 0.85rem; color: var(--text); }
+#legend .example { color: var(--muted); font-style: italic; }
+#legend .wordlist { color: var(--muted); font-size: 0.8rem; line-height: 1.5; }
+kbd {
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  padding: 0.05rem 0.4rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+}
+
+/* ---- Tela de fim de jogo ---- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.overlay .panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 2rem;
+  text-align: center;
+  max-width: 90vw;
+}
+.overlay h2 { color: var(--accent2); margin-top: 0; }
+.overlay button { margin-top: 1rem; }
+
+/* ---- Responsivo: empilha a legenda abaixo em telas estreitas ---- */
+@media (max-width: 860px) {
+  #gameScreen { flex-direction: column; padding: 1rem; }
+  #legend {
+    flex: none;
+    width: 100%;
+    max-height: none;
+  }
+}
+
+@media (max-width: 560px) {
+  #scenarioPicker {
+    grid-template-columns: 1fr;
+  }
+}
