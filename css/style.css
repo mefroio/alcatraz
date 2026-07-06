@@ -132,6 +132,9 @@ html, body {
   flex-wrap: wrap;
 }
 
+/* ---- Controles de toque (ocultos por padrao; revelados em body.is-mobile) ---- */
+#touchControls { display: none; }
+
 button {
   font-family: inherit;
   background: var(--panel-alt);
@@ -256,3 +259,102 @@ kbd {
     grid-template-columns: 1fr;
   }
 }
+
+/* ================================================================
+   Modo movel: ativado por JS (body.is-mobile) so' em aparelhos com
+   toque e tela estreita. Adiciona um D-pad na tela, aproveita melhor
+   a area do celular e evita zoom/realce de toque. O desktop nunca
+   recebe estas regras.
+   ================================================================ */
+body.is-mobile {
+  /* impede o "puxar para atualizar" e o scroll elastico atrapalharem
+     os toques no D-pad; a pagina em si nao precisa rolar no jogo. */
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+}
+body.is-mobile button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation; /* sem duplo-toque-zoom nos botoes */
+}
+
+body.is-mobile #gameScreen {
+  flex-direction: column;
+  padding: 0.5rem;
+  gap: 0.6rem;
+  min-height: 100dvh; /* usa a altura visivel real do celular (barra do browser) */
+  justify-content: flex-start;
+}
+
+body.is-mobile #playArea {
+  width: 100%;
+  gap: 0.4rem;
+}
+
+/* O logo ocupa pouco espaco vertical no celular. */
+body.is-mobile #logoBanner {
+  width: min(80vw, 340px);
+}
+
+/* Mapa: o maior possivel respeitando a largura E a altura sobrando
+   para log, campo de comando e D-pad. */
+body.is-mobile #mazeCanvas {
+  width: min(92vw, 52dvh);
+}
+
+body.is-mobile #messageLog {
+  width: 100%;
+  min-height: 4.5rem;
+  max-height: 16dvh;
+  font-size: 0.9rem;
+}
+
+body.is-mobile #commandBar { width: 100%; }
+/* font-size 16px evita o zoom automatico do iOS ao focar o campo. */
+body.is-mobile #commandInput { font-size: 16px; }
+
+body.is-mobile #quickButtons {
+  width: 100%;
+  justify-content: center;
+}
+body.is-mobile #quickButtons button { flex: 1 1 auto; }
+
+/* No celular a legenda longa fica recolhida ao final, sem empurrar o jogo. */
+body.is-mobile #legend {
+  width: 100%;
+  max-height: 30dvh;
+}
+
+/* ---- D-pad ---- */
+body.is-mobile #touchControls {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 0.2rem 0 0.4rem;
+}
+body.is-mobile #dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 3.6rem);
+  grid-template-rows: repeat(3, 3.6rem);
+  gap: 0.35rem;
+}
+body.is-mobile .dpadBtn {
+  font-size: 1.6rem;
+  line-height: 1;
+  padding: 0;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+body.is-mobile .dpadBtn:active {
+  background: var(--accent);
+  color: #000;
+  border-color: var(--accent);
+}
+body.is-mobile .dpadUp    { grid-column: 2; grid-row: 1; }
+body.is-mobile .dpadLeft  { grid-column: 1; grid-row: 2; }
+body.is-mobile .dpadRight { grid-column: 3; grid-row: 2; }
+body.is-mobile .dpadDown  { grid-column: 2; grid-row: 3; }

@@ -45,7 +45,19 @@ function cacheEls() {
     endSubtitle: document.getElementById('endSubtitle'),
     btnRestart: document.getElementById('btnRestart'),
     legendVerbs: document.getElementById('legendVerbs'),
+    touchControls: document.getElementById('touchControls'),
+    dpadButtons: document.querySelectorAll('#dpad [data-move]'),
   };
+}
+
+// Detecta dispositivo movel por CAPACIDADE (toque como ponteiro grosseiro
+// primario) em vez de user-agent, que e' fragil. Aparelhos touch estreitos
+// recebem os controles na tela; desktop (mesmo com touchscreen + mouse) nao.
+function isMobileDevice() {
+  const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  const narrow = window.matchMedia && window.matchMedia('(max-width: 820px)').matches;
+  return (coarse || hasTouch) && narrow;
 }
 
 // ---- Log de mensagens (histórico rolável; o original limpava 3 linhas fixas
@@ -364,7 +376,30 @@ function init() {
   els.btnInventory.addEventListener('click', () => { if (titleDismissed && !state.gameOver && !state.won) showInventory(); });
   els.btnRestart.addEventListener('click', restartGame);
 
-  console.info('[Alcatraz] Modo debug disponível no console: alcatrazDebug.stages()');
+  setupTouchControls();
+
+  // Modo debug desabilitado (mantido no código, mas não anunciado):
+  // console.info('[Alcatraz] Modo debug disponível no console: alcatrazDebug.stages()');
+}
+
+// ---- Controles de toque (somente mobile) ----
+function setupTouchControls() {
+  const mobile = isMobileDevice();
+  document.body.classList.toggle('is-mobile', mobile);
+  if (!mobile) return;
+
+  // Cada seta do D-pad move na direcao correspondente (1=N 2=S 3=L 4=O).
+  // Usamos pointerdown + preventDefault para resposta imediata e para nao
+  // roubar o foco do campo de comando nem disparar zoom/scroll do navegador.
+  els.dpadButtons.forEach((btn) => {
+    const dir = Number(btn.dataset.move);
+    btn.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      if (!titleDismissed || state.gameOver || state.won) return;
+      if (document.activeElement === els.commandInput) els.commandInput.blur();
+      attemptMove(dir);
+    });
+  });
 }
 
 document.addEventListener('DOMContentLoaded', init);
@@ -525,4 +560,6 @@ const alcatrazDebug = {
   state() { return state; },
   win() { triggerWin(); },
 };
-window.alcatrazDebug = alcatrazDebug;
+// Modo debug desabilitado: o objeto acima permanece no código, mas não é
+// exposto no console. Para reativar, descomente a linha abaixo.
+// window.alcatrazDebug = alcatrazDebug;

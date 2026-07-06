@@ -39,6 +39,16 @@
       <button id="btnLook" type="button">Ver objetos aqui (Tab)</button>
       <button id="btnInventory" type="button">Ver inventário (Esc)</button>
     </div>
+
+    <!-- Controles de toque: exibidos apenas em dispositivos moveis (classe is-mobile no body) -->
+    <div id="touchControls" aria-label="Controles de toque">
+      <div id="dpad" role="group" aria-label="Mover">
+        <button class="dpadBtn dpadUp" type="button" data-move="1" aria-label="Cima">&uarr;</button>
+        <button class="dpadBtn dpadLeft" type="button" data-move="4" aria-label="Esquerda">&larr;</button>
+        <button class="dpadBtn dpadRight" type="button" data-move="3" aria-label="Direita">&rarr;</button>
+        <button class="dpadBtn dpadDown" type="button" data-move="2" aria-label="Baixo">&darr;</button>
+      </div>
+    </div>
   </main>
 
   <aside id="legend">
