@@ -11,6 +11,8 @@ Você é um prisioneiro de Alcatraz e seu objetivo é escapar. O jogo combina a 
 ### No navegador
 Abra `index.html` — não requer instalação, servidor nem build. Na tela de título é possível escolher entre o **Alcatraz original** e o **Alcatraz 2**.
 
+No **computador**:
+
 - **Setas** — mover pelo labirinto
 - **Digite** um comando e **Enter** para confirmar (ex.: `PEGUE PA`, `ABRA GRADES COM CHAVE`)
 - **Tab** — ver os objetos no local atual
@@ -18,13 +20,18 @@ Abra `index.html` — não requer instalação, servidor nem build. Na tela de t
 
 Um painel lateral fixo lista, o tempo todo, todos os verbos, substantivos e teclas disponíveis.
 
+No **celular/tablet**: um layout dedicado é ativado automaticamente, com um **D-pad na tela** para andar e botões para ver objetos e o inventário. O teclado do aparelho é usado para digitar os comandos. No computador nada muda.
+
 ### No MSX (real ou emulador)
 Os arquivos em [`reference/`](reference/) são MSX BASIC puro, prontos para rodar:
 
 - `ALCATRAZ.BAS` — o jogo original de 1986
 - `ALCATRAZ2.BAS` — a sequência
+- `INTRO2.BAS` — tela de título do Alcatraz 2 (carrega o jogo ao final)
 
-Carregue o `.BAS` (em formato ASCII) num emulador como **webMSX** ou **openMSX** e dê `RUN`. Também é possível gerar um disquete inicializável (veja abaixo).
+A forma mais simples é usar o **disquete pronto** [`reference/ALCATRAZ.DSK`](reference/): monte-o em **webMSX** ou **openMSX** e ligue a máquina — um menu de boot deixa escolher qual jogo iniciar. Como alternativa, é possível carregar um `.BAS` avulso (em formato ASCII) e dar `RUN`.
+
+> No MSX real, o Alcatraz 2 divide a tela de título (`INTRO2.BAS`) do jogo em arquivos separados que se chamam via `RUN`. Isso é proposital: o BASIC do MSX tem pouca memória, e manter a introdução fora do jogo libera RAM suficiente para ele rodar por completo.
 
 ## O que há de novo
 
@@ -35,6 +42,7 @@ A versão JavaScript reimplementa o motor do BASIC de 1986 com fidelidade de com
 - **Gráficos autênticos**: os tiles são desenhados a partir dos mesmos bitmaps e cores do MSX (paleta TMS9918), ampliados com nitidez de pixel.
 - **Parser idêntico**: mesma gramática de `VERBO SUBSTANTIVO [preposição] SUBSTANTIVO`, com o vocabulário original — mas agora aceitando também acentuação correta na digitação (`LENÇOL` e `LENCOL` funcionam igual).
 - **Textos com acentuação**: todas as mensagens foram reescritas com acentuação em português (o MSX de 1986 não tinha esse recurso), sem alterar a mecânica.
+- **Suporte a toque**: em celulares e tablets, um D-pad e botões aparecem na tela e o layout se adapta ao aparelho — sem afetar a experiência no computador.
 
 ### Alcatraz 2 — A Fuga Ainda Mais Impossível
 Uma sequência inédita construída sobre o mesmo motor, com um roteiro totalmente novo:
@@ -52,18 +60,22 @@ O roteiro completo (com solução) é mantido fora do repositório, para preserv
 ```
 alcatraz/
   index.html              # jogo para navegador (ponto de entrada)
-  css/                    # estilos
+  css/                    # estilos (inclui o layout mobile)
   js/                     # motor: dados, parser, ações, render e estado
   reference/
     ALCATRAZ.BAS          # jogo original em MSX BASIC (1986)
     ALCATRAZ2.BAS         # sequência em MSX BASIC
+    INTRO2.BAS            # tela de título do Alcatraz 2 (chama o jogo)
     AUTOEXEC.BAS          # menu de boot do disquete (escolhe o jogo)
+    ALCATRAZ.DSK          # disquete MSX pronto (gerado)
   tools/
-    rebuild_dsk.py        # gera um disquete MSX (.DSK) inicializável
+    rebuild_dsk.py        # gera o disquete MSX (.DSK) inicializável
   rebuild-dsk.ps1         # atalho para o gerador de disquete
 ```
 
 ## Gerar o disquete MSX (.DSK)
+
+O disquete já vem pronto em [`reference/ALCATRAZ.DSK`](reference/); esta etapa só é necessária se você alterar algum `.BAS`.
 
 O script [`tools/rebuild_dsk.py`](tools/rebuild_dsk.py) tokeniza os `.BAS` e monta um disquete FAT12 de 720 KB inicializável, com um menu de boot que permite escolher entre o Alcatraz original e o Alcatraz 2.
 
